@@ -1,0 +1,3 @@
+﻿select ordnum, mon, cid, aid, pid, qty, totalUSD
+from orders
+where mon= 'feb' or mon = 'mar';
