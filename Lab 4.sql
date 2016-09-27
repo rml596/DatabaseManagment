@@ -1,4 +1,4 @@
---Lab 4
+﻿--Lab 4
 --q1
 --Get the cities of agents booking an order for a customer whose cid is 'c006'
 select city
@@ -50,14 +50,14 @@ where cid in (select cid
 --Get the ids of products not ordered by any customers who placed any order through agent a08 in pid order from highest to lowest.
 select pid 
 from products
-where pid in (select pid
+where pid not in (select pid
 		from orders
 		where cid in (select cid
 				from orders
-				where aid != 'a08'
+				where aid = 'a08'
 				)
 		)
-order by pid ASC;
+order by pid DESC;
 
 --q6
 --Get the name, discounts, and city for all customers who place orders through agents in Dallas or New York.
@@ -83,7 +83,10 @@ where discount in (select discount
 		and city not in ('Dallas','London')
 
 --q8
---Tell me about check constraints: What are they? What are they good for? What’s the advantage of putting that sort of thing inside the database? Make up some examples of good uses of check constraints and some examples of bad uses of check constraints. Explain the differences in your examples and argue your case.
+/*Tell me about check constraints: What are they? What are they good for? 
+What’s the advantage of putting that sort of thing inside the database? 
+Make up some examples of good uses of check constraints and some examples of bad uses of check constraints. 
+Explain the differences in your examples and argue your case.*/
 
 /*
 
@@ -96,7 +99,9 @@ it helps with making the database less prone to user errors. For example, in the
 example if the user meant to put 10 as the ID but only put 0, the check constraint would
 display an error. A good example of a check constraint is discount >=0 && discount <100.
 A bad example would be discount >=0. The difference between the two is that in the good
-example there are limits on either side of what the discount can be (the discount should not be more that 100%), where as in the bad example the discount could be more than 100% which is not a real life scenario in business.
+example there are limits on either side of what the discount can be (the discount should 
+not be more that 100%), where as in the bad example the discount could be more than 100% 
+which is not a real life scenario in business.
 
 */
 			 
