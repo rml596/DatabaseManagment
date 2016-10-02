@@ -32,6 +32,14 @@ where cid in (select distinct cid
 		from orders
 		where aid != 'a03'
 		);
+
+		/* CORRECTION 
+		select cid, name
+		from customers 
+		where cid not in (select cid
+				from orders
+				where aid = 'a03'
+				);
 		
 --q4
 --Get the ids of customers who ordered both product p01 and p07.

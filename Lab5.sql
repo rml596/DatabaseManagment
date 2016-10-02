@@ -14,10 +14,21 @@ where orders.cid = 'c006';
 --Show the ids of products ordered through any agent who makes at least one order for a customer in Kyoto, sorted by pid from highest to lowest. Use joins; no subqueries
 select distinct pid
 from orders
-inner join customers
-on orders.cid = customers.cid
-where customers.city = 'Kyoto'
-order by pid DESC;
+where aid in (select distinct aid
+		from orders
+		inner join customers on orders.cid = customers.cid
+		where customers.city = 'Kyoto'
+		
+	)order by pid DESC;
+
+	/*ORIGINAL 
+	select distinct pid
+	from orders
+	inner join customers
+	on orders.cid = customers.cid
+	where customers.city = 'Kyoto'
+	order by pid DESC;
+	*/
 
 --q3
 --Show the names of customers who have never placed an order. Use a subquery
@@ -30,17 +41,17 @@ where cid not in (select cid
 --Show the names of customers who have never placed an order. Use an outer join
 Select name
 from customers
-Full outer join orders
-on customers.cid = orders.cid
-where orders.cid is null;
+	Full outer join orders
+	on customers.cid = orders.cid
+	where orders.cid is null;
 
 --q5
 --Show the names of customers who placed at least one order through an agent in their own city, along with those agent(s') names.
 select distinct customers.name, agents.name
-from orders
-inner join agents on agents.aid=orders.aid
-inner join customers on customers.cid=customers.cid
-where agents.city=customers.city;
+from orders 
+	inner join agents on agents.aid=orders.aid
+	inner join customers on customers.cid=orders.cid
+	where agents.city=customers.city;
 
 
 --q6
