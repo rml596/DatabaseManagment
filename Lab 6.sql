@@ -63,3 +63,11 @@ where totalUSD != calculation;
 
 --q7
 --What’s the difference between a LEFT OUTER JOIN and a RIGHT OUTER JOIN? Give example queries in SQL to demonstrate. (Feel free to use the CAP database to make your points here.)
+/*
+
+The difference between left and right outer join is that in a left join, the table in the "table1 left outer join table2 on ..." means that 
+the table left (table1) takes preference, so if there are values that don't match in table1, they are still displayed. Right outer join is
+just the opposite. An example of this is if you do "Customers left outer join Orders" every customer is matched up to an order and even the 
+customers that did not get placed an order is displayed on the output. NULL is put in its place instead.
+
+*/
