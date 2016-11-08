@@ -1,3 +1,0 @@
-select pid, name, city, quantity, priceUSD
-from products
-where priceUSD >= 1 and city <> 'New York' and city <> 'Duluth';

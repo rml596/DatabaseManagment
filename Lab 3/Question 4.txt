@@ -1,3 +1,0 @@
-select name, city
-from customers
-where city='Duluth';

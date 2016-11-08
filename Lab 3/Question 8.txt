@@ -1,3 +1,0 @@
-﻿select ordnum, mon, cid, aid, pid, qty, totalUSD
-from orders
-where mon= 'feb' and totalUSD >= 600;
