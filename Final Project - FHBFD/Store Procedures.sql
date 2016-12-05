@@ -27,6 +27,7 @@ select viewMembersResponding('c0001', 'results');
 fetch all from results;
 
 
+/*
 create function viewMemberInformation(char(4), refcursor) returns refcursor AS
 $$
 declare
@@ -39,6 +40,9 @@ begin
 end;
 $$
 language plpgsql;
+select viewMembersResponding('c0001', 'results');
+fetch all from results;
+*/
 
 
 create function viewMutualAid(char(4), refcursor) returns refcursor AS

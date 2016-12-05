@@ -1,4 +1,20 @@
 ﻿--Deletes all information in the database
+delete from administrativeMember;
+delete from associateMember;
+delete from firefighter;
+delete from responderPeople;
+delete from members;
+delete from responderApparatus;
+delete from apparatus;
+delete from apparatusType;
+delete from calls;
+delete from address;
+delete from mutualAid;
+delete from stations;
+delete from box;
+delete from positions;
+delete from job;
+
 
 --Inserts data into the Jobs table
 insert into job(jobID, title) values

@@ -1,6 +1,13 @@
-﻿DROP VIEW IF EXISTS memberAddress;
+DROP FUNCTION IF EXISTS viewMembersResponding(char(5), refcursor);
+DROP FUNCTION IF EXISTS viewMemberInformation(char(4), refcursor);
+DROP FUNCTION IF EXISTS viewMutualAid(char(4), refcursor);
+
+DROP VIEW IF EXISTS memberAddress;
 DROP VIEW IF EXISTS memberJobs;
 DROP VIEW IF EXISTS callInformation;
+DROP VIEW IF EXISTS boxMutualAid;
+DROP VIEW IF EXISTS apparatusInformation;
+DROP VIEW IF EXISTS memberResponders;
 
 DROP TABLE IF EXISTS administrativeMember;
 DROP TABLE IF EXISTS associateMember;
@@ -32,7 +39,8 @@ CREATE TABLE positions(
 );
 CREATE TABLE box(
 	boxID char(4) NOT NULL unique,
-	classification text
+	classification text,
+        primary key (boxID)
 );
 CREATE TABLE stations(
 	stationID char(4) NOT NULL,
@@ -49,9 +57,9 @@ CREATE TABLE address(
 	addressID char(6) NOT NULL unique,
 	houseNumber int,
 	street text,
-	zipCode char(5),
 	city text,
 	state text,
+        zipCode char(5),
 	boxID char(4) references box(boxID),
 	primary key (addressID)
 );
@@ -80,9 +88,9 @@ CREATE TABLE apparatus(
 	primary key(apparatusID)
 );
 CREATE TABLE responderApparatus(
-	apparatusID char(4) NOT NULL references apparatus(apparatusID),
 	callID char(6) NOT NULL references calls(callID),
-	primary key (apparatusID, callID)
+	apparatusID char(4) NOT NULL references apparatus(apparatusID),
+	primary key (callID, apparatusID)
 );
 CREATE TABLE members(
 	memberID char(4) NOT NULL unique,
@@ -95,9 +103,9 @@ CREATE TABLE members(
 	primary key (memberID)
 );
 CREATE TABLE responderPeople(
-	memberID char(4) NOT NULL,
 	callID char(6) NOT NULL,
-	primary key(memberID, callID)
+	memberID char(4) NOT NULL,
+	primary key(callID, memberID)
 );
 CREATE TABLE firefighter(
 	memberID char(4) NOT NULL unique references members(memberID),
@@ -138,7 +146,6 @@ CREATE VIEW memberJobs AS
    select members.memberID,
           members.firstName,
           members.lastName,
-          positions.positionID,
           job.jobID,
           job.title
    from members, positions, job, firefighter, administrativeMember
@@ -147,7 +154,7 @@ CREATE VIEW memberJobs AS
    and   positions.jobID = job.jobID
    order by members.memberID;
 --Select statement      
-select * from callInformation;
+select * from memberJobs;
 
 CREATE VIEW callInformation AS 
    select calls.callID,
