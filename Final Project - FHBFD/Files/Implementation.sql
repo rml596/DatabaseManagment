@@ -1,13 +1,14 @@
-DROP FUNCTION IF EXISTS viewMembersResponding(char(5), refcursor);
+﻿DROP FUNCTION IF EXISTS viewMembersResponding(char(5), refcursor);
 DROP FUNCTION IF EXISTS viewMemberInformation(char(4), refcursor);
 DROP FUNCTION IF EXISTS viewMutualAid(char(4), refcursor);
 
 DROP VIEW IF EXISTS memberAddress;
-DROP VIEW IF EXISTS memberJobs;
 DROP VIEW IF EXISTS callInformation;
 DROP VIEW IF EXISTS boxMutualAid;
 DROP VIEW IF EXISTS apparatusInformation;
 DROP VIEW IF EXISTS memberResponders;
+DROP VIEW IF EXISTS callTime;
+DROP VIEW IF EXISTS callTimeResponder;
 
 DROP TABLE IF EXISTS administrativeMember;
 DROP TABLE IF EXISTS associateMember;
@@ -68,8 +69,8 @@ CREATE TABLE calls(
 	addressID char(6) references address(addressID),
 	callType text,
 	description text,
-	dispatchTime timestamp,
-	clearTime timestamp,
+	dispatchTime timestamp NOT NULL,
+	clearTime timestamp check(clearTime>dispatchTime) NOT NULL,
 	primary key (callID)
 );
 CREATE TABLE apparatusType(
@@ -94,11 +95,11 @@ CREATE TABLE responderApparatus(
 );
 CREATE TABLE members(
 	memberID char(4) NOT NULL unique,
-	firstName text,
-	lastName text,
-	dateOfBirth date,
-	dateJoin date NOT NULL,
-	dateQuit date,
+	firstName text NOT NULL,
+	lastName text NOT NULL,
+	dateOfBirth date NOT NULL,
+	dateJoin date check(dateJoin>dateOfBirth) NOT NULL,
+	dateQuit date check(dateQuit>dateJoin),
 	addressID char(6) references address(addressID),
 	primary key (memberID)
 );
@@ -141,20 +142,6 @@ CREATE VIEW memberAddress AS
    order by members.memberID;
 --Select statement
 select * from memberAddress;
-
-CREATE VIEW memberJobs AS
-   select members.memberID,
-          members.firstName,
-          members.lastName,
-          job.jobID,
-          job.title
-   from members, positions, job, firefighter, administrativeMember
-   where (members.memberID = firefighter.memberID or members.memberID = administrativeMember.memberID)
-   and   (firefighter.positionID = positions.positionID or administrativeMember.positionID = positions.positionID)
-   and   positions.jobID = job.jobID
-   order by members.memberID;
---Select statement      
-select * from memberJobs;
 
 CREATE VIEW callInformation AS 
    select calls.callID,
@@ -209,3 +196,21 @@ CREATE VIEW memberResponders AS
    and   responderPeople.memberID=members.memberID;
 --Select statement
 select * from memberResponders;
+
+CREATE VIEW callTime AS 
+   select callID, sum(clearTime-dispatchTime)
+   from calls
+   group by callID
+   order by callID;
+--Select statement
+select * from callTime;
+
+CREATE VIEW callTimeResponder AS
+   select calls.callID, count(members.firstName) 
+   from calls, members, responderPeople
+   where calls.callID = responderPeople.callID
+   and responderPeople.memberID=members.memberID
+   group by calls.callID
+   order by calls.callID;
+
+select * from callTimeResponder;
